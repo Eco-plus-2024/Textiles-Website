@@ -5,6 +5,8 @@ import bodyParser from "body-parser";
 import authRouter from "./router/authRouter.js";
 import productRouter from "./router/productRouter.js";
 import mongodb from "./config/mongodb.js";
+import categoryRouter from "./router/categoryRouter.js";
+import brandRouter from "./router/brandRouter.js";
 
 
 dotevn.config()
@@ -23,6 +25,8 @@ app.get('/',(req,res)=>{
 
 app.use('/api/auth',authRouter)
 app.use('/api/product',productRouter)
+app.use('/api/category',categoryRouter)
+app.use('/api/brand',brandRouter)
 
 const Port =process.env.PORT || 3001
 
