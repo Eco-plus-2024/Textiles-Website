@@ -13,6 +13,7 @@ export const userRegister = async (req, res) => {
       return res.json({ message: "Please fill all feilds" });
     }
     const existingEmail = await userDetails.findOne({ email: email });
+    
 
     const existingPhone = await userDetails.findOne({
       mobileNumber: mobileNumber,
