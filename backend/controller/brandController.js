@@ -45,5 +45,44 @@ export const editBrand = async (req, res) => {
 };
 
 export const deleteBrand=async(req,res)=>{
-      
+      const {id} =req.params
+      const idValidation=mongoose.Types.ObjectId.isValid(id)
+      if(!idValidation){
+        return res.json({message:'The monogdb id validation failed'})
+      }
+      if(!id){
+        return res.json({message:'Not get any id'})
+      }
+      const deleteId=await brandSchema.findByIdAndDelete({_id:id})
+     if(!deleteId){
+      return res.json({message:'The  id does not match any id please check it'})
+     }
+      return res.json({message:'The brand delete is successfully',data:deleteId})
+}
+
+export const getBrand=async(req,res)=>{
+  try {
+    const {id}= req.params
+    if(!id){
+      const brandDetails=await brandSchema.find({isActive:true})
+      return res.json({message:"The brand data fetched successfully",data:brandDetails})
+    }
+
+    const idValidation=mongoose.Types.ObjectId.isValid(id)
+    if(!idValidation){
+    
+     return res.json({message:'Id validation failed'})
+    }
+   
+   const brandDetails= await brandSchema.findOne({_id:id,isActive:true})
+   if(!brandDetails){
+     return res.json({message:'The id not matched'})
+   }
+    return res.json({message:'The detailed fetched based on thier id',data:brandDetails})
+    
+  } catch (error) {
+    return res.json({message:error.message})
+  }
+
+
 }
