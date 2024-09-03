@@ -111,3 +111,25 @@ export const deleteCoupen= async( req,res)=>{
     }
    
 }
+
+export const getCoupen= async(req,res)=>{
+     try {
+        const {id}= req.params
+        if(!id){
+             const coupenDetails= await coupenSchema.find()
+             return res.json({message:'The coupenDetails data fetched successfully',data:coupenDetails})
+        }
+        const idvalidation = mongoose.Types.ObjectId.isValid(id)
+        if(!idvalidation){
+        return res.json({message:'The mongodb id validation failed'})
+        }
+        const coupenDetailById= await coupenSchema.findById(id)
+        if(!coupenDetailById){
+            return res.json({message:'The id deos not match'})
+        }
+        return res.json({message:'The get details by id fetched successfully',data:coupenDetailById})
+        
+     } catch (error) {
+        return res.json({message:error.message})
+     }
+}
