@@ -8,6 +8,7 @@ import mongodb from "./config/mongodb.js";
 import categoryRouter from "./router/categoryRouter.js";
 import brandRouter from "./router/brandRouter.js";
 import bannerRouter from "./router/bannerRouter.js";
+import coupenRouter from "./router/coupenRouter.js";
 
 
 dotevn.config()
@@ -29,6 +30,7 @@ app.use('/api/product',productRouter)
 app.use('/api/category',categoryRouter)
 app.use('/api/brand',brandRouter)
 app.use('/api/banner',bannerRouter)
+app.use('/api/coupen',coupenRouter)
 
 const Port =process.env.PORT || 3001
 
