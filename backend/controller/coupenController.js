@@ -67,7 +67,7 @@ export const editCoupen = async (req, res) => {
       return res.json({ message: "The mongodb id validation failed" });
     }
 
-    await coupenSchema.findByIdAndUpdate(
+    const coupenDetails=await coupenSchema.findOneAndUpdate(
       { _id: id, isActive: true },
       {
         coupenName,
@@ -79,6 +79,9 @@ export const editCoupen = async (req, res) => {
         endDate,
       }
     );
+    if(!coupenDetails){
+        return res.json({message:'The id does not match'})
+    }
 
     return res.json({ message: "The coupen details updated successfully" });
   } catch (error) {
