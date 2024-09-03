@@ -53,6 +53,7 @@ export const EditCategory = async (req, res) => {
 export const deleteCategory = async (req, res) => {
     try {
         const {id}= req.params
+      
        const isValidation=mongoose.Types.ObjectId.isValid(id)
        if(!isValidation){
         return res.json({message:'The mongodb id validation failed'})
@@ -72,20 +73,17 @@ export const deleteCategory = async (req, res) => {
 
 export const getCategory = async (req, res) => {
     try {
-        const { types ,id} = req.query;
+        const { types } = req.query;
+        const {id}=req.params;
         if(id){
             const categoryDetails=await categorySchema.findById(id)
             return res.json({message:'The fetched successfully',data:categoryDetails})
-
         }
        if(!types&&!id){
 
        const categoryDetails= await categorySchema.find({isActive:true})
         return res.json({message:'All detail get successfully',data:categoryDetails})
        }
-
-
-
         const categoryDetails = await categorySchema.find({ types, isActive: true });
         return res.json({
           message: "The category get successfully",
