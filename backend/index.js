@@ -8,6 +8,7 @@ import mongodb from "./config/mongodb.js";
 import categoryRouter from "./router/categoryRouter.js";
 import brandRouter from "./router/brandRouter.js";
 import bannerRouter from "./router/bannerRouter.js";
+import cors from 'cors'
 
 
 dotevn.config()
@@ -18,6 +19,9 @@ app.use(morgan('dev'))
 app.use(express.json())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended:true}))
+app.use(cors({
+   origin: ["http://localhost:3000"]
+ }));
 
 
 app.get('/',(req,res)=>{

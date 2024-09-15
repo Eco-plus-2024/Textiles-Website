@@ -72,26 +72,54 @@ export const deleteCategory = async (req, res) => {
 };
 
 export const getCategory = async (req, res) => {
-    try {
-        const { types } = req.query;
-        const {id}=req.params;
-        if(id){
-            const categoryDetails=await categorySchema.findById(id)
-            return res.json({message:'The fetched successfully',data:categoryDetails})
-        }
-       if(!types&&!id){
+  try {
+    const { types } = req.query;
+    const { id } = req.params;
 
-       const categoryDetails= await categorySchema.find({isActive:true})
-        return res.json({message:'All detail get successfully',data:categoryDetails})
-       }
-        const categoryDetails = await categorySchema.find({ types, isActive: true });
-        return res.json({
-          message: "The category get successfully",
-          data: categoryDetails,
-        });
-        
-    } catch (error) {
-        return res.json({message:error})
+    console.log(`Page : ${req.query.page} , Limit : ${req.query.limit}`);
+    
+    // Extract pagination params from query (default to page 1 and limit 10 if not provided)
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    if (id) {
+      const categoryDetails = await categorySchema.findById(id);
+      return res.json({ message: 'The fetched successfully', data: categoryDetails });
     }
- 
+
+    let categoryDetails;
+    
+    if (!types && !id) {
+      
+      categoryDetails = await categorySchema.find({ isActive: true })
+        .skip(skip)
+        .limit(limit);
+      const totalItems = await categorySchema.countDocuments({ isActive: true });
+      return res.json({
+        message: 'All details fetched successfully',
+        data: categoryDetails,
+        totalItems, 
+        currentPage: page,
+        totalPages: Math.ceil(totalItems / limit),
+      });
+    }
+
+   
+    categoryDetails = await categorySchema.find({ types, isActive: true })
+      .skip(skip)
+      .limit(limit);
+    const totalFilteredItems = await categorySchema.countDocuments({ types, isActive: true });
+
+    return res.json({
+      message: "The category fetched successfully",
+      data: categoryDetails,
+      totalItems: totalFilteredItems,
+      currentPage: page,
+      totalPages: Math.ceil(totalFilteredItems / limit),
+    });
+    
+  } catch (error) {
+    return res.json({ message: error.message });
+  }
 };
