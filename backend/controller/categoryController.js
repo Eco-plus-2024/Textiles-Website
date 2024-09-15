@@ -75,10 +75,7 @@ export const getCategory = async (req, res) => {
   try {
     const { types } = req.query;
     const { id } = req.params;
-
-    console.log(`Page : ${req.query.page} , Limit : ${req.query.limit}`);
     
-    // Extract pagination params from query (default to page 1 and limit 10 if not provided)
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
