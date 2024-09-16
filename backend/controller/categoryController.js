@@ -73,7 +73,7 @@ export const deleteCategory = async (req, res) => {
 
 export const getCategory = async (req, res) => {
   try {
-    const { types } = req.query;
+    const { types, search } = req.query;
     const { id } = req.params;
     
     const page = parseInt(req.query.page) || 1;
@@ -82,41 +82,34 @@ export const getCategory = async (req, res) => {
 
     if (id) {
       const categoryDetails = await categorySchema.findById(id);
-      return res.json({ message: 'The fetched successfully', data: categoryDetails });
+      return res.json({ message: 'Category fetched successfully', data: categoryDetails });
     }
 
-    let categoryDetails;
-    
-    if (!types && !id) {
-      
-      categoryDetails = await categorySchema.find({ isActive: true })
-        .skip(skip)
-        .limit(limit);
-      const totalItems = await categorySchema.countDocuments({ isActive: true });
-      return res.json({
-        message: 'All details fetched successfully',
-        data: categoryDetails,
-        totalItems, 
-        currentPage: page,
-        totalPages: Math.ceil(totalItems / limit),
-      });
+    let query = { isActive: true };
+
+    if (types) {
+      query.types = types;
     }
 
-   
-    categoryDetails = await categorySchema.find({ types, isActive: true })
+    if (search) {
+      query.name = { $regex: search, $options: 'i' }; // Case-insensitive search
+    }
+
+    const categoryDetails = await categorySchema.find(query)
       .skip(skip)
       .limit(limit);
-    const totalFilteredItems = await categorySchema.countDocuments({ types, isActive: true });
+
+    const totalItems = await categorySchema.countDocuments(query);
 
     return res.json({
-      message: "The category fetched successfully",
+      message: 'Categories fetched successfully',
       data: categoryDetails,
-      totalItems: totalFilteredItems,
+      totalItems,
       currentPage: page,
-      totalPages: Math.ceil(totalFilteredItems / limit),
+      totalPages: Math.ceil(totalItems / limit),
     });
     
   } catch (error) {
-    return res.json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };
