@@ -9,6 +9,8 @@ import categoryRouter from "./router/categoryRouter.js";
 import brandRouter from "./router/brandRouter.js";
 import bannerRouter from "./router/bannerRouter.js";
 import cors from 'cors'
+import coupenRouter from "./router/coupenRouter.js";
+import newsLetterRouter from "./router/newsLetterRouter.js";
 
 
 dotevn.config()
@@ -33,6 +35,8 @@ app.use('/api/product',productRouter)
 app.use('/api/category',categoryRouter)
 app.use('/api/brand',brandRouter)
 app.use('/api/banner',bannerRouter)
+app.use('/api/coupen',coupenRouter)
+app.use('/api/newsletter',newsLetterRouter)
 
 const Port =process.env.PORT || 3001
 
