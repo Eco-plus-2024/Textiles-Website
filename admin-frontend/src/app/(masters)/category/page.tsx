@@ -1,10 +1,11 @@
-import CategoryForm from "@/components/Category/CategoryForm";
+
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
+import CategoryTable from "@/components/Tables/category-table";
 
 const page = () => {
   return (
     <DefaultLayout>
-     <CategoryForm/>
+      <CategoryTable/>
     </DefaultLayout>
   );
 };
