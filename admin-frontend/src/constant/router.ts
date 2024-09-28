@@ -11,7 +11,7 @@ import TableIcon from "@/assets/icons/table-icon";
 
 export const menuGroups = [
   {
-    name: "MENU",
+    // name: "MENU",
     menuItems: [
       {
         icon: DashboardIcon,
