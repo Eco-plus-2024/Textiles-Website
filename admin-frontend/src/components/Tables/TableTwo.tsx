@@ -1,5 +1,8 @@
+"use client"
+import React, { useState, useMemo } from "react";
 import Image from "next/image";
 import { Product } from "@/types/product";
+import { PaginationWithLinks } from "@/ui/pagination-with-link";
 
 const productData: Product[] = [
   {
@@ -37,12 +40,40 @@ const productData: Product[] = [
 ];
 
 const TableTwo = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [itemsPerPage] = useState(10);
+
+  const filteredProducts = useMemo(() => {
+    return productData.filter((product) =>
+      product.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [searchTerm]);
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredProducts.slice(indexOfFirstItem, indexOfLastItem);
+
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
   return (
     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-      <div className="px-4 py-6 md:px-6 xl:px-7.5">
-        <h4 className="text-xl font-semibold text-black dark:text-white">
+      <div className="flex flex-col items-center justify-between px-4 py-6 md:px-6 xl:px-7.5">
+        <h4 className="text-xl font-semibold text-black dark:text-white mb-4">
           Top Products
         </h4>
+        <div className="flex w-full justify-between items-center">
+          <input
+            type="text"
+            placeholder="Search products..."
+            className="w-1/2 rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <button className="flex justify-center rounded bg-primary p-3 font-medium text-gray hover:bg-opacity-90">
+            Add new
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-6 border-t border-stroke px-4 py-4.5 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5">
@@ -63,7 +94,7 @@ const TableTwo = () => {
         </div>
       </div>
 
-      {productData.map((product, key) => (
+      {currentItems.map((product, key) => (
         <div
           className="grid grid-cols-6 border-t border-stroke px-4 py-4.5 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5"
           key={key}
@@ -101,6 +132,11 @@ const TableTwo = () => {
           </div>
         </div>
       ))}
+      <div className="py-10 px-10">
+
+      <PaginationWithLinks totalCount={30} pageSize={10} page={2}/>
+      </div>
+    
     </div>
   );
 };

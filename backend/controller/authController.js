@@ -1,7 +1,13 @@
+import { configDotenv } from "dotenv";
 import { generateOTP } from "../config/generateOtp.js";
 import { cb, message, transport } from "../config/nodeMailer.js";
 import userDetails from "../models/authModel.js";
-import bcrypt, { hash } from "bcrypt";
+import bcrypt from "bcrypt";
+import { generatejwtToken } from "../middleware/jwt.js";
+
+
+
+configDotenv();
 
 let userData, token;
 
@@ -13,7 +19,6 @@ export const userRegister = async (req, res) => {
       return res.json({ message: "Please fill all feilds" });
     }
     const existingEmail = await userDetails.findOne({ email: email });
-    
 
     const existingPhone = await userDetails.findOne({
       mobileNumber: mobileNumber,
@@ -87,11 +92,19 @@ export const userLogin = async (req, res) => {
     if (!checkPassword) {
       return res.json({ message: "Unauthorised login" });
     }
+    
+    const token =generatejwtToken({id:userDetail._id})
+ 
     userDetail.password = null;
-    return res.json({ message: "User logged successfully", data: userDetail });
+    return res.json({
+      message: "User logged successfully",
+      data: userDetail,
+      token,
+  
+    });
   } catch (error) {
     return res.json({
-      error: error,
+      message: error.message,
     });
   }
 };
@@ -173,7 +186,7 @@ export const forgetPassword = async (req, res) => {
     if (!DBemail) {
       return res.json({ message: "Your email not register please sign up" });
     }
-    userData=DBemail
+    userData = DBemail;
     token = generateOTP();
     const recipientMail = email;
     const Subject = "Forget Password";
@@ -193,29 +206,28 @@ export const UpdatePassword = async (req, res) => {
     if (!otp || !email || !password || !conformpassword) {
       return res.json({ message: "Please fill all fields" });
     }
-    if(userData==null||token==null){
-      return res.json({message:'Please generate otp'})
+    if (userData == null || token == null) {
+      return res.json({ message: "Please generate otp" });
     }
     if (otp != token) {
       return res.json({ message: "Your enter otp is incorrect" });
     }
-    if(userData.email!=email){
-      return res.json({message:'The email is doesnot match'})
+    if (userData.email != email) {
+      return res.json({ message: "The email is doesnot match" });
     }
-    
+
     const hashedpassword = await bcrypt.hash(password, 13);
 
     if (password != conformpassword) {
       return res.json({ message: "Please the conformpassword must be same" });
     }
 
-
     await userDetails.findOneAndUpdate(
       { _id: userData._id },
       { password: hashedpassword }
     );
     token = null;
-    userData=null
+    userData = null;
 
     return res.json({ message: "The password update successfully" });
   } catch (error) {

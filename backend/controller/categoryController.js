@@ -19,7 +19,7 @@ export const createCategory = async (req, res) => {
     });
     await category.save();
 
-    return res.json({ message: "Category added successfully" });
+    return res.json({ message: "Category added successfully",data:category });
   } catch (error) {
     return res.json({ message: error });
   }
@@ -53,6 +53,7 @@ export const EditCategory = async (req, res) => {
 export const deleteCategory = async (req, res) => {
     try {
         const {id}= req.params
+      
        const isValidation=mongoose.Types.ObjectId.isValid(id)
        if(!isValidation){
         return res.json({message:'The mongodb id validation failed'})
@@ -71,29 +72,44 @@ export const deleteCategory = async (req, res) => {
 };
 
 export const getCategory = async (req, res) => {
-    try {
-        const { types ,id} = req.query;
-        if(id){
-            const categoryDetails=await categorySchema.findById(id)
-            return res.json({message:'The fetched successfully',data:categoryDetails})
+  try {
+    const { types, search } = req.query;
+    const { id } = req.params;
+    
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
 
-        }
-       if(!types&&!id){
-
-       const categoryDetails= await categorySchema.find({isActive:true})
-        return res.json({message:'All detail get successfully',data:categoryDetails})
-       }
-
-
-
-        const categoryDetails = await categorySchema.find({ types, isActive: true });
-        return res.json({
-          message: "The category get successfully",
-          data: categoryDetails,
-        });
-        
-    } catch (error) {
-        return res.json({message:error})
+    if (id) {
+      const categoryDetails = await categorySchema.findById(id);
+      return res.json({ message: 'Category fetched successfully', data: categoryDetails });
     }
- 
+
+    let query = { isActive: true };
+
+    if (types) {
+      query.types = types;
+    }
+
+    if (search) {
+      query.name = { $regex: search, $options: 'i' }; // Case-insensitive search
+    }
+
+    const categoryDetails = await categorySchema.find(query)
+      .skip(skip)
+      .limit(limit);
+
+    const totalItems = await categorySchema.countDocuments(query);
+
+    return res.json({
+      message: 'Categories fetched successfully',
+      data: categoryDetails,
+      totalItems,
+      currentPage: page,
+      totalPages: Math.ceil(totalItems / limit),
+    });
+    
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
 };
