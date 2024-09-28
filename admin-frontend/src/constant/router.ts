@@ -16,8 +16,8 @@ export const menuGroups = [
       {
         icon: DashboardIcon,
         label: "Dashboard",
-        route: "#",
-        children: [{ label: "eCommerce", route: "/" }],
+        route: "/",
+        // children: [{ label: "eCommerce", route: "/" }],
       },
       {
         icon: MasterIcon,
