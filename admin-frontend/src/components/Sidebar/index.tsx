@@ -1,111 +1,20 @@
 "use client";
 
 import React from "react";
-import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import SidebarItem from "@/components/Sidebar/SidebarItem";
 import ClickOutside from "@/components/ClickOutside";
 import useLocalStorage from "@/hooks/useLocalStorage";
-import DashboardIcon from "@/assets/icons/dashboard-icon";
-import MasterIcon from "@/assets/icons/master-icon";
-import CalendarIcon from "@/assets/icons/calendar-icon";
-import ProfileIcon from "@/assets/icons/profile-icon";
-import FormIcon from "@/assets/icons/form-icon";
-import TableIcon from "@/assets/icons/table-icon";
-import SettingsIcon from "@/assets/icons/settings-icon";
-import ChartIcon from "@/assets/icons/chart-icon";
-import ElementIcon from "@/assets/icons/element-icon";
-import AuthenticationIcon from "@/assets/icons/authentication-icon";
 import LeftArrowIcon from "@/assets/icons/leftArrow-icon";
+import { menuGroups } from "@/constant/router";
 
 interface SidebarProps {
   sidebarOpen: boolean;
   setSidebarOpen: (arg: boolean) => void;
 }
 
-const menuGroups = [
-  {
-    name: "MENU",
-    menuItems: [
-      {
-        icon: <DashboardIcon />,
-        label: "Dashboard",
-        route: "#",
-        children: [{ label: "eCommerce", route: "/" }],
-      },
-      {
-        icon: <MasterIcon />,
-        label: "Masters",
-        route: "#",
-        children: [
-          { label: "Category", route: "/category" },
-          { label: "Brand", route: "/brand" },
-        ],
-      },
-      {
-        icon: <CalendarIcon />,
-        label: "Calendar",
-        route: "/calendar",
-      },
-      {
-        icon: <ProfileIcon />,
-        label: "Profile",
-        route: "/profile",
-      },
-      {
-        icon: <FormIcon />,
-        label: "Forms",
-        route: "#",
-        children: [
-          { label: "Form Elements", route: "/forms/form-elements" },
-          { label: "Form Layout", route: "/forms/form-layout" },
-        ],
-      },
-      {
-        icon: <TableIcon />,
-        label: "Tables",
-        route: "/tables",
-      },
-      {
-        icon: <SettingsIcon />,
-        label: "Settings",
-        route: "/settings",
-      },
-    ],
-  },
-  {
-    name: "OTHERS",
-    menuItems: [
-      {
-        icon: <ChartIcon />,
-        label: "Chart",
-        route: "/chart",
-      },
-      {
-        icon: <ElementIcon />,
-        label: "UI Elements",
-        route: "#",
-        children: [
-          { label: "Alerts", route: "/ui/alerts" },
-          { label: "Buttons", route: "/ui/buttons" },
-        ],
-      },
-      {
-        icon: <AuthenticationIcon />,
-        label: "Authentication",
-        route: "#",
-        children: [
-          { label: "Sign In", route: "/auth/signin" },
-          { label: "Sign Up", route: "/auth/signup" },
-        ],
-      },
-    ],
-  },
-];
-
 const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
-  const pathname = usePathname();
   const [pageName, setPageName] = useLocalStorage("selectedMenu", "dashboard");
 
   return (
