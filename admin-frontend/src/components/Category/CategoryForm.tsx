@@ -1,17 +1,9 @@
 import React from "react";
-import SwitcherOne from "../Switchers/SwitcherOne";
-import SwitcherTwo from "../Switchers/SwitcherTwo";
-import SwitcherThree from "../Switchers/SwitcherThree";
-import SwitcherFour from "../Switchers/SwitcherFour";
-import DatePickerOne from "../FormElements/DatePicker/DatePickerOne";
-import DatePickerTwo from "../FormElements/DatePicker/DatePickerTwo";
-import TableTwo from "../Tables/TableTwo";
-
 
 const CategoryForm = () => {
   return (
     <div>
-      {/* <div className="flex flex-col gap-9">
+      <div className="flex flex-col gap-9">
        
         <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
           <div className="border-b flex items-center justify-between border-stroke px-6.5 py-4 dark:border-strokedark">
@@ -44,9 +36,7 @@ const CategoryForm = () => {
             </div>
           </div>
         </div>
-      </div> */}
-       <TableTwo />
-       
+      </div>
     </div>
   );
 };
