@@ -5,7 +5,7 @@ import { axiosInstane } from "../../../axios";
 export const useCategoryListMutation = () => {
   return useMutation({
     mutationKey:["getCategory"],
-    mutationFn: async () => {
-     return await axiosInstane.get("/category");
+    mutationFn: async (params: any) => {
+     return await axiosInstane.get(`/category/${params}`);
     }  });
 };

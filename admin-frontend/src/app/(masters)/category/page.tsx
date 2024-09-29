@@ -1,6 +1,7 @@
 
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
-import CategoryTable from "@/components/Tables/category-table";
+import CategoryTable from "@/components/Tables/category/category-table";
+
 
 const page = () => {
   return (
